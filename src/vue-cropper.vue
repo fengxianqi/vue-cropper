@@ -1,69 +1,46 @@
 <template>
 	<div class="vue-cropper" ref="cropper" @mouseover="scaleImg" @mouseout="cancleScale">
 		<div class="cropper-box">
-			<div class="cropper-box-canvas"
-			 	v-show="!loading"
-				:style="{
+			<div class="cropper-box-canvas" v-show="!loading" :style="{
 					'width': trueWidth + 'px',
 					'height': trueHeight + 'px',
 					'transform': 'scale(' + scale + ',' + scale + ') ' + 'translate3d('+ x / scale + 'px,' + y / scale + 'px,' + '0)'
 					+ 'rotateZ('+ rotate * 90 +'deg)'
-					}"
-          >
-				<img
-					:src="imgs"
-					alt="cropper-img"
-					ref="cropperImg"
-					/>
+					}">
+				<img :src="imgs" alt="cropper-img" ref="cropperImg" />
 			</div>
 		</div>
-		<div
-			class="cropper-drag-box"
-		  :class="{'cropper-move': move && !crop, 'cropper-crop': crop, 'cropper-modal': cropping}"
-			@mousedown="startMove"
-      @touchstart="startMove"
-			>
-			</div>
-			<div
-				v-show="cropping"
-				class="cropper-crop-box"
-				:style="{
+		<div class="cropper-drag-box" :class="{'cropper-move': move && !crop, 'cropper-crop': crop, 'cropper-modal': cropping}" @mousedown="startMove" @touchstart="startMove">
+		</div>
+		<div v-show="cropping" class="cropper-crop-box" :style="{
 					'width': cropW + 'px',
 					'height': cropH + 'px',
 					'transform': 'translate3d('+ cropOffsertX + 'px,' + cropOffsertY + 'px,' + '0)'
 				}">
-				<span class="cropper-view-box">
-					<img
-					:style="{
+			<span class="cropper-view-box">
+				<img :style="{
 						'width': trueWidth + 'px',
 						'height': trueHeight + 'px',
 						'transform': 'scale(' + scale + ',' + scale + ') ' + 'translate3d('+ (x - cropOffsertX) / scale  + 'px,' + (y - cropOffsertY) / scale + 'px,' + '0)'
 						+ 'rotateZ('+ rotate * 90 +'deg)'
-						}"
-						:src="imgs"
-						alt="cropper-img"
-						/>
-				</span>
-				<span
-				  class="cropper-face cropper-move"
-					@mousedown="cropMove"
-		      @touchstart="cropMove"
-				></span>
-				<span class="crop-info" v-if="info" :style="{'top': cropInfo}">{{  this.cropW > 0 ? this.cropW : 0 }} × {{ this.cropH > 0 ? this.cropH : 0 }}</span>
-				<span v-if="!fixedBox">
-					<span class="crop-line line-w" @mousedown="changeCropSize($event, false, true, 0, 1)" @touchstart="changeCropSize($event, false, true, 0, 1)"></span>
-					<span class="crop-line line-a" @mousedown="changeCropSize($event, true, false, 1, 0)" @touchstart="changeCropSize($event, true, false, 1, 0)"></span>
-					<span class="crop-line line-s" @mousedown="changeCropSize($event, false, true, 0, 2)" @touchstart="changeCropSize($event, false, true, 0, 2)"></span>
-					<span class="crop-line line-d" @mousedown="changeCropSize($event, true, false, 2, 0)" @touchstart="changeCropSize($event, true, false, 2, 0)"></span>
-					<span class="crop-point point1" @mousedown="changeCropSize($event, true, true, 1, 1)" @touchstart="changeCropSize($event, true, true, 1, 1)"></span>
-					<span class="crop-point point2" @mousedown="changeCropSize($event, false, true, 0, 1)" @touchstart="changeCropSize($event, false, true, 0, 1)"></span>
-					<span class="crop-point point3" @mousedown="changeCropSize($event, true, true, 2, 1)" @touchstart="changeCropSize($event, true, true, 2, 1)"></span>
-					<span class="crop-point point4" @mousedown="changeCropSize($event, true, false, 1, 0)" @touchstart="changeCropSize($event, true, false, 1, 0)"></span>
-					<span class="crop-point point5" @mousedown="changeCropSize($event, true, false, 2, 0)" @touchstart="changeCropSize($event, true, false, 2, 0)"></span>
-					<span class="crop-point point6" @mousedown="changeCropSize($event, true, true, 1, 2)" @touchstart="changeCropSize($event, true, true, 1, 2)"></span>
-					<span class="crop-point point7" @mousedown="changeCropSize($event, false, true, 0, 2)" @touchstart="changeCropSize($event, false, true, 0, 2)"></span>
-					<span class="crop-point point8" @mousedown="changeCropSize($event, true, true, 2, 2)" @touchstart="changeCropSize($event, true, true, 2, 2)"></span>
-				</span>
+						}" :src="imgs" alt="cropper-img" />
+			</span>
+			<span class="cropper-face cropper-move" @mousedown="cropMove" @touchstart="cropMove"></span>
+			<span class="crop-info" v-if="info" :style="{'top': cropInfo}">{{ this.cropperWidth > 0 ? this.cropperWidth : 0 }} × {{ this.cropperHeight > 0 ? this.cropperHeight : 0 }}</span>
+			<span v-if="!fixedBox">
+				<span class="crop-line line-w" @mousedown="changeCropSize($event, false, true, 0, 1)" @touchstart="changeCropSize($event, false, true, 0, 1)"></span>
+				<span class="crop-line line-a" @mousedown="changeCropSize($event, true, false, 1, 0)" @touchstart="changeCropSize($event, true, false, 1, 0)"></span>
+				<span class="crop-line line-s" @mousedown="changeCropSize($event, false, true, 0, 2)" @touchstart="changeCropSize($event, false, true, 0, 2)"></span>
+				<span class="crop-line line-d" @mousedown="changeCropSize($event, true, false, 2, 0)" @touchstart="changeCropSize($event, true, false, 2, 0)"></span>
+				<span class="crop-point point1" @mousedown="changeCropSize($event, true, true, 1, 1)" @touchstart="changeCropSize($event, true, true, 1, 1)"></span>
+				<span class="crop-point point2" @mousedown="changeCropSize($event, false, true, 0, 1)" @touchstart="changeCropSize($event, false, true, 0, 1)"></span>
+				<span class="crop-point point3" @mousedown="changeCropSize($event, true, true, 2, 1)" @touchstart="changeCropSize($event, true, true, 2, 1)"></span>
+				<span class="crop-point point4" @mousedown="changeCropSize($event, true, false, 1, 0)" @touchstart="changeCropSize($event, true, false, 1, 0)"></span>
+				<span class="crop-point point5" @mousedown="changeCropSize($event, true, false, 2, 0)" @touchstart="changeCropSize($event, true, false, 2, 0)"></span>
+				<span class="crop-point point6" @mousedown="changeCropSize($event, true, true, 1, 2)" @touchstart="changeCropSize($event, true, true, 1, 2)"></span>
+				<span class="crop-point point7" @mousedown="changeCropSize($event, false, true, 0, 2)" @touchstart="changeCropSize($event, false, true, 0, 2)"></span>
+				<span class="crop-point point8" @mousedown="changeCropSize($event, true, true, 2, 2)" @touchstart="changeCropSize($event, true, true, 2, 2)"></span>
+			</span>
 		</div>
 	</div>
 </template>
@@ -71,8 +48,8 @@
 <script>
 import exif from 'exif-js'
 export default {
-  data: function () {
-    return {
+	data: function () {
+		return {
 			// 容器高宽
 			w: 0,
 			h: 0,
@@ -131,8 +108,8 @@ export default {
 			scaling: false,
 			scalingSet: '',
 			coeStatus: ''
-    }
-  },
+		}
+	},
 	props: {
 		img: {
 			type: String,
@@ -210,6 +187,12 @@ export default {
 	computed: {
 		cropInfo () {
 			return this.cropOffsertY > 20 ? '-20px' : '0px'
+		},
+		cropperWidth () {
+			return Number.parseInt(this.cropW / this.scale)
+		},
+		cropperHeight () {
+			return Number.parseInt(this.cropH / this.scale)
 		}
 	},
 	watch: {
@@ -291,27 +274,27 @@ export default {
 							canvas.width = width
 							canvas.height = height
 							ctx.drawImage(img, 0, 0, width, height)
-						break
+							break
 						case 1:
 						case -3:
 							// 旋转90度 或者-270度 宽度和高度对调
 							canvas.width = height
 							canvas.height = width
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, 0, -height, width, height)
 							break
 						case 2:
 						case -2:
 							canvas.width = width
 							canvas.height = height
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, -width, -height, width, height)
-						break
+							break
 						case 3:
 						case -1:
 							canvas.width = height
 							canvas.height = width
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, -width, 0, width, height)
 							break
 						default:
@@ -342,19 +325,19 @@ export default {
 				}
 				// 开始移动
 				this.moveX = (e.clientX ? e.clientX : e.touches[0].clientX) - this.x
-	      this.moveY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.y
+				this.moveY = (e.clientY ? e.clientY : e.touches[0].clientY) - this.y
 				if (e.touches) {
 					window.addEventListener('touchmove', this.moveImg)
-	      	window.addEventListener('touchend', this.leaveImg)
+					window.addEventListener('touchend', this.leaveImg)
 					if (e.touches.length == 2) {
-					  // 记录手指刚刚放上去
+						// 记录手指刚刚放上去
 						this.touches = e.touches
 						window.addEventListener('touchmove', this.touchScale)
-		      	window.addEventListener('touchend', this.cancleTouchScale)
+						window.addEventListener('touchend', this.cancleTouchScale)
 					}
 				} else {
 					window.addEventListener('mousemove', this.moveImg)
-	      	window.addEventListener('mouseup', this.leaveImg)
+					window.addEventListener('mouseup', this.leaveImg)
 				}
 			} else {
 				// 截图ing
@@ -421,7 +404,7 @@ export default {
 		},
 
 		cancleTouchScale (e) {
-		  window.removeEventListener('touchmove', this.touchScale)
+			window.removeEventListener('touchmove', this.touchScale)
 		},
 
 		// 移动图片
@@ -435,7 +418,7 @@ export default {
 				return false
 			}
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
-      var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			var nowY = e.clientY ? e.clientY : e.touches[0].clientY
 			this.$nextTick(() => {
 				this.x = ~~(nowX - this.moveX)
 				this.y = ~~(nowY - this.moveY)
@@ -444,9 +427,9 @@ export default {
 		// 移动图片结束
 		leaveImg (e) {
 			window.removeEventListener('mousemove', this.moveImg)
-      window.removeEventListener('touchmove', this.moveImg)
-      window.removeEventListener('mouseup', this.leaveImg)
-      window.removeEventListener('touchend', this.leaveImg)
+			window.removeEventListener('touchmove', this.moveImg)
+			window.removeEventListener('mouseup', this.leaveImg)
+			window.removeEventListener('touchend', this.leaveImg)
 		},
 		// 缩放图片
 		scaleImg () {
@@ -466,8 +449,8 @@ export default {
 			e.preventDefault()
 			var change = e.deltaY || e.wheelDelta
 			// 根据图片本身大小 决定每次改变大小的系数, 图片越大系数越小
-      var isFirefox = navigator.userAgent.indexOf('Firefox')
-      change = isFirefox > 0 ? change * 30 : change
+			var isFirefox = navigator.userAgent.indexOf('Firefox')
+			change = isFirefox > 0 ? change * 30 : change
 			// 1px - 0.2
 			var coe = this.coe
 			coe = coe / this.trueWidth > coe / this.trueHeight ? coe / this.trueHeight : coe / this.trueWidth
@@ -475,7 +458,7 @@ export default {
 			num < 0 ? this.scale += Math.abs(num) : this.scale > Math.abs(num) ? this.scale -= Math.abs(num) : this.scale
 			// 延迟0.1s 每次放大大或者缩小的范围
 			let status = num < 0 ? 'add' : 'reduce'
-      if (status !== this.coeStatus) {
+			if (status !== this.coeStatus) {
 				this.coeStatus = status
 				this.coe = 0.2
 			}
@@ -501,7 +484,7 @@ export default {
 			e.preventDefault()
 			// 移动生成大小
 			var nowX = e.clientX ? e.clientX : e.touches ? e.touches[0].clientX : 0
-      var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
+			var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -510,7 +493,7 @@ export default {
 					this.cropOffsertX = this.cropChangeX
 				} else {
 					this.cropW = (this.w - this.cropChangeX + Math.abs(fw)) > this.w ? this.cropChangeX : Math.abs(fw)
-					this.cropOffsertX = this.cropChangeX  + fw > 0 ? this.cropChangeX + fw : 0
+					this.cropOffsertX = this.cropChangeX + fw > 0 ? this.cropChangeX + fw : 0
 				}
 
 				if (!this.fixed) {
@@ -519,7 +502,7 @@ export default {
 						this.cropOffsertY = this.cropChangeY
 					} else {
 						this.cropH = (this.h - this.cropChangeY + Math.abs(fh)) > this.h ? this.cropChangeY : Math.abs(fh)
-						this.cropOffsertY = this.cropChangeY  + fh > 0 ? this.cropChangeY + fh : 0
+						this.cropOffsertY = this.cropChangeY + fh > 0 ? this.cropChangeY + fh : 0
 					}
 				} else {
 					var fixedHeight = ~~(this.cropW / this.fixedNumber[0] * this.fixedNumber[1])
@@ -567,7 +550,7 @@ export default {
 		changeCropNow (e) {
 			e.preventDefault()
 			var nowX = e.clientX ? e.clientX : e.touches ? e.touches[0].clientX : 0
-      var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
+			var nowY = e.clientY ? e.clientY : e.touches ? e.touches[0].clientY : 0
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -672,8 +655,8 @@ export default {
 		cropMove (e) {
 			e.preventDefault()
 			if (!this.canMoveBox) {
-        this.crop = false
-        this.startMove(e)
+				this.crop = false
+				this.startMove(e)
 				return false
 			}
 			window.addEventListener('mousemove', this.moveCrop)
@@ -687,7 +670,7 @@ export default {
 		moveCrop (e) {
 			e.preventDefault()
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
-      var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			var nowY = e.clientY ? e.clientY : e.touches[0].clientY
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -741,7 +724,7 @@ export default {
 					canvas.height = height
 					ctx.save()
 					switch (rotate) {
-    				case 0:
+						case 0:
 							if (!this.full) {
 								ctx.drawImage(img, dx, dy, imgW, imgH)
 							} else {
@@ -750,14 +733,14 @@ export default {
 								canvas.height = height / this.scale
 								ctx.drawImage(img, dx / this.scale, dy / this.scale, imgW / this.scale, imgH / this.scale)
 							}
-    					break
+							break
 						case 1:
 						case -3:
-						  if (!this.full) {
+							if (!this.full) {
 								// 换算图片旋转后的坐标弥补
 								dx = dx + (imgW - imgH) / 2
 								dy = dy + (imgH - imgW) / 2
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								ctx.drawImage(img, dy, -dx - imgH, imgW, imgH)
 							} else {
 								canvas.width = width / this.scale
@@ -765,31 +748,31 @@ export default {
 								// 换算图片旋转后的坐标弥补
 								dx = dx / this.scale + (imgW / this.scale - imgH / this.scale) / 2
 								dy = dy / this.scale + (imgH / this.scale - imgW / this.scale) / 2
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								ctx.drawImage(img, dy, (-dx - imgH / this.scale), imgW / this.scale, imgH / this.scale)
 							}
 							break
 						case 2:
 						case -2:
 							if (!this.full) {
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								ctx.drawImage(img, -dx - imgW, -dy - imgH, imgW, imgH)
 							} else {
 								canvas.width = width / this.scale
 								canvas.height = height / this.scale
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								dx = dx / this.scale
 								dy = dy / this.scale
 								ctx.drawImage(img, -dx - imgW / this.scale, -dy - imgH / this.scale, imgW / this.scale, imgH / this.scale)
 							}
-						break
+							break
 						case 3:
 						case -1:
 							if (!this.full) {
 								// 换算图片旋转后的坐标弥补
 								dx = dx + (imgW - imgH) / 2
 								dy = dy + (imgH - imgW) / 2
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								ctx.drawImage(img, -dy - imgW, dx, imgW, imgH)
 							} else {
 								canvas.width = width / this.scale
@@ -797,11 +780,11 @@ export default {
 								// 换算图片旋转后的坐标弥补
 								dx = dx / this.scale + (imgW / this.scale - imgH / this.scale) / 2
 								dy = dy / this.scale + (imgH / this.scale - imgW / this.scale) / 2
-								ctx.rotate(rotate * 90  * Math.PI / 180)
+								ctx.rotate(rotate * 90 * Math.PI / 180)
 								ctx.drawImage(img, -dy - imgW / this.scale, dx, imgW / this.scale, imgH / this.scale)
 							}
 							break
-    				default:
+						default:
 							if (!this.full) {
 								ctx.drawImage(img, dx, dy, imgW, imgH)
 							} else {
@@ -810,46 +793,46 @@ export default {
 								canvas.height = height / this.scale
 								ctx.drawImage(img, dx / this.scale, dy / this.scale, imgW / this.scale, imgH / this.scale)
 							}
-    			}
+					}
 					ctx.restore()
 				} else {
 					let width = trueWidth * this.scale
 					let height = trueHeight * this.scale
 					let ctx = canvas.getContext('2d')
 					ctx.save()
-    			switch (rotate) {
-    				case 0:
+					switch (rotate) {
+						case 0:
 							canvas.width = width
 							canvas.height = height
 							ctx.drawImage(img, 0, 0, width, height)
-    				break
+							break
 						case 1:
 						case -3:
 							// 旋转90度 或者-270度 宽度和高度对调
 							canvas.width = height
 							canvas.height = width
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, 0, -height, width, height)
 							break
 						case 2:
 						case -2:
 							canvas.width = width
 							canvas.height = height
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, -width, -height, width, height)
-						break
+							break
 						case 3:
 						case -1:
 							canvas.width = height
 							canvas.height = width
-							ctx.rotate(rotate * 90  * Math.PI / 180)
+							ctx.rotate(rotate * 90 * Math.PI / 180)
 							ctx.drawImage(img, -width, 0, width, height)
 							break
-    				default:
+						default:
 							canvas.width = width
 							canvas.height = height
 							ctx.drawImage(img, 0, 0, width, height)
-    			}
+					}
 					ctx.restore()
 				}
 				let data = canvas.toDataURL('image/' + this.outputType, this.outputSize)
@@ -863,26 +846,26 @@ export default {
 			img.src = this.imgs
 		},
 		//转化base64 为blob对象
-		getCropBlob(cb) {
+		getCropBlob (cb) {
 			this.getCropData((data) => {
 				var arr = data.split(',')
-			  var mime = arr[0].match(/:(.*?);/)[1]
-			  var bstr = atob(arr[1])
-			  var n = bstr.length
-			  var u8arr = new Uint8Array(n)
+				var mime = arr[0].match(/:(.*?);/)[1]
+				var bstr = atob(arr[1])
+				var n = bstr.length
+				var u8arr = new Uint8Array(n)
 				while (n--) {
-			    u8arr[n] = bstr.charCodeAt(n)
-			  }
+					u8arr[n] = bstr.charCodeAt(n)
+				}
 				cb(
 					new Blob([u8arr], {
-			    	type: mime
-			  	}
-				))
+						type: mime
+					}
+					))
 			})
 		},
 
 		// 自动预览函数
-		showPreview() {
+		showPreview () {
 			var obj = {}
 			obj.div = {
 				'width': this.cropW + 'px',
@@ -891,13 +874,13 @@ export default {
 			obj.img = {
 				'width': this.trueWidth + 'px',
 				'height': this.trueHeight + 'px',
-				'transform': 'scale(' + this.scale + ',' + this.scale + ') ' + 'translate3d('+ (this.x - this.cropOffsertX) / this.scale  + 'px,' + (this.y - this.cropOffsertY) / this.scale + 'px,' + '0)'
-				+ 'rotateZ('+ this.rotate * 90 + 'deg)'
+				'transform': 'scale(' + this.scale + ',' + this.scale + ') ' + 'translate3d(' + (this.x - this.cropOffsertX) / this.scale + 'px,' + (this.y - this.cropOffsertY) / this.scale + 'px,' + '0)'
+					+ 'rotateZ(' + this.rotate * 90 + 'deg)'
 			}
 			obj.w = this.cropW
 			obj.h = this.cropH
 			obj.url = this.imgs
-			this.$emit('realTime',  obj)
+			this.$emit('realTime', obj)
 		},
 		// reload 图片布局函数
 		reload () {
@@ -906,8 +889,8 @@ export default {
 				// 读取图片的信息原始信息， 解析是否需要旋转
 				// 读取图片的旋转信息
 				// 得到外层容器的宽度高度
-				this.w =  ~~(window.getComputedStyle(this.$refs.cropper).width.replace('px', ''))
-				this.h =  ~~(window.getComputedStyle(this.$refs.cropper).height.replace('px', ''))
+				this.w = ~~(window.getComputedStyle(this.$refs.cropper).width.replace('px', ''))
+				this.h = ~~(window.getComputedStyle(this.$refs.cropper).height.replace('px', ''))
 
 				// 存入图片真实高度
 				this.trueWidth = img.width
@@ -1013,17 +996,17 @@ export default {
 		this.isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 		// 兼容blob
 		if (!HTMLCanvasElement.prototype.toBlob) {
-		 Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-		  value: function (callback, type, quality) {
-		    var binStr = atob( this.toDataURL(type, quality).split(',')[1] ),
-		        len = binStr.length,
-		        arr = new Uint8Array(len)
-		    for (var i=0; i<len; i++ ) {
-		     arr[i] = binStr.charCodeAt(i)
-		    }
-		    callback( new Blob( [arr], {type: that.type || 'image/png'} ) )
-		  }
-		 })
+			Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+				value: function (callback, type, quality) {
+					var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+						len = binStr.length,
+						arr = new Uint8Array(len)
+					for (var i = 0; i < len; i++) {
+						arr[i] = binStr.charCodeAt(i)
+					}
+					callback(new Blob([arr], { type: that.type || 'image/png' }))
+				}
+			})
 		}
 	}
 }
@@ -1031,224 +1014,231 @@ export default {
 
 <style scoped>
 	.vue-cropper {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		box-sizing: border-box;
-		user-select: none;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-		direction: ltr;
-		touch-action: none;
-  	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
+	  position: relative;
+	  width: 100%;
+	  height: 100%;
+	  box-sizing: border-box;
+	  user-select: none;
+	  -webkit-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  direction: ltr;
+	  touch-action: none;
+	  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC');
 	}
 
-	.cropper-box, .cropper-box-canvas, .cropper-drag-box, .cropper-crop-box, .cropper-face{
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		user-select: none;
+	.cropper-box,
+	.cropper-box-canvas,
+	.cropper-drag-box,
+	.cropper-crop-box,
+	.cropper-face {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  left: 0;
+	  user-select: none;
 	}
 
 	.cropper-box-canvas img {
-		position: relative;
-		user-select: none;
-		transform: none;
-		max-width: none;
-		max-height: none;
+	  position: relative;
+	  user-select: none;
+	  transform: none;
+	  max-width: none;
+	  max-height: none;
 	}
 
 	.cropper-box {
-		overflow: hidden;
+	  overflow: hidden;
 	}
 
 	.cropper-move {
-		cursor: move;
+	  cursor: move;
 	}
 
 	.cropper-crop {
-    cursor: crosshair;
+	  cursor: crosshair;
 	}
 
 	.cropper-modal {
-		background: rgba(0, 0, 0, 0.5);
+	  background: rgba(0, 0, 0, 0.5);
 	}
 
 	.cropper-crop-box {
-		/*border: 2px solid #39f;*/
+	  /*border: 2px solid #39f;*/
 	}
 
 	.cropper-view-box {
-		display: block;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-		outline: 1px solid #39f;
-    outline-color: rgba(51, 153, 255, 0.75);
-		user-select: none;
+	  display: block;
+	  overflow: hidden;
+	  width: 100%;
+	  height: 100%;
+	  outline: 1px solid #39f;
+	  outline-color: rgba(51, 153, 255, 0.75);
+	  user-select: none;
 	}
 
 	.cropper-view-box img {
-		user-select: none;
-		max-width: none;
-		max-height: none;
+	  user-select: none;
+	  max-width: none;
+	  max-height: none;
 	}
 
 	.cropper-face {
-		top: 0;
-		left: 0;
-		background-color: #fff;
-		opacity: 0.1;
+	  top: 0;
+	  left: 0;
+	  background-color: #fff;
+	  opacity: 0.1;
 	}
 
 	.crop-info {
-		position: absolute;
-		left: 0px;
-		min-width: 65px;
-		text-align: center;
-		color: white;
-		line-height: 20px;
-		background-color: rgba(0, 0, 0, 0.8);
-		font-size: 12px;
+	  position: absolute;
+	  left: 0px;
+	  min-width: 65px;
+	  text-align: center;
+	  color: white;
+	  line-height: 20px;
+	  background-color: rgba(0, 0, 0, 0.8);
+	  font-size: 12px;
 	}
 
 	.crop-line {
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-		opacity: .1;
+	  position: absolute;
+	  display: block;
+	  width: 100%;
+	  height: 100%;
+	  opacity: 0.1;
 	}
 
 	.line-w {
-		top: -3px;
-    left: 0;
-    height: 5px;
-    cursor: n-resize;
+	  top: -3px;
+	  left: 0;
+	  height: 5px;
+	  cursor: n-resize;
 	}
 
 	.line-a {
-		top: 0;
-    left: -3px;
-    width: 5px;
-    cursor: w-resize;
+	  top: 0;
+	  left: -3px;
+	  width: 5px;
+	  cursor: w-resize;
 	}
 
 	.line-s {
-		bottom: -3px;
-		left: 0;
-		height: 5px;
-		cursor: s-resize;
+	  bottom: -3px;
+	  left: 0;
+	  height: 5px;
+	  cursor: s-resize;
 	}
 
 	.line-d {
-		top: 0;
-    right: -3px;
-    width: 5px;
-    cursor: e-resize;
+	  top: 0;
+	  right: -3px;
+	  width: 5px;
+	  cursor: e-resize;
 	}
 
 	.crop-point {
-		position: absolute;
-		width: 8px;
-    height: 8px;
-    opacity: .75;
-    background-color: #39f;
-		border-radius: 100%;
+	  position: absolute;
+	  width: 8px;
+	  height: 8px;
+	  opacity: 0.75;
+	  background-color: #39f;
+	  border-radius: 100%;
 	}
 
 	.point1 {
-		top: -4px;
-    left: -4px;
-    cursor: nw-resize;
+	  top: -4px;
+	  left: -4px;
+	  cursor: nw-resize;
 	}
 
 	.point2 {
-		top: -5px;
-    left: 50%;
-    margin-left: -3px;
-    cursor: n-resize;
+	  top: -5px;
+	  left: 50%;
+	  margin-left: -3px;
+	  cursor: n-resize;
 	}
 
 	.point3 {
-		top: -4px;
-    right: -4px;
-    cursor: ne-resize;
+	  top: -4px;
+	  right: -4px;
+	  cursor: ne-resize;
 	}
 
 	.point4 {
-		top: 50%;
-    left: -4px;
-    margin-top: -3px;
-    cursor: w-resize;
+	  top: 50%;
+	  left: -4px;
+	  margin-top: -3px;
+	  cursor: w-resize;
 	}
 
 	.point5 {
-		top: 50%;
-    right: -4px;
-    margin-top: -3px;
-    cursor: w-resize;
+	  top: 50%;
+	  right: -4px;
+	  margin-top: -3px;
+	  cursor: w-resize;
 	}
 
 	.point6 {
-		bottom: -5px;
-		left: -4px;
-		cursor: sw-resize;
+	  bottom: -5px;
+	  left: -4px;
+	  cursor: sw-resize;
 	}
 
 	.point7 {
-		bottom: -5px;
-		left: 50%;
-		margin-left: -3px;
-		cursor: s-resize;
+	  bottom: -5px;
+	  left: 50%;
+	  margin-left: -3px;
+	  cursor: s-resize;
 	}
 
 	.point8 {
-		bottom: -5px;
-		right: -4px;
-		cursor: nw-resize;
+	  bottom: -5px;
+	  right: -4px;
+	  cursor: nw-resize;
 	}
 
 	@media screen and (max-width: 500px) {
-		.crop-point {
-			position: absolute;
-			width: 20px;
-			height: 20px;
-			opacity: .45;
-			background-color: #39f;
-			border-radius: 100%;
-		}
+	  .crop-point {
+	    position: absolute;
+	    width: 20px;
+	    height: 20px;
+	    opacity: 0.45;
+	    background-color: #39f;
+	    border-radius: 100%;
+	  }
 
-		.point1 {
-			top: -10px;
+	  .point1 {
+	    top: -10px;
 	    left: -10px;
-		}
+	  }
 
-		.point2, .point4, .point5, .point7 {
-			display: none;
-		}
+	  .point2,
+	  .point4,
+	  .point5,
+	  .point7 {
+	    display: none;
+	  }
 
-		.point3 {
-			top: -10px;
-			right: -10px;
-		}
+	  .point3 {
+	    top: -10px;
+	    right: -10px;
+	  }
 
-		.point4 {
-			top: 0;
-			left: 0;
-		}
+	  .point4 {
+	    top: 0;
+	    left: 0;
+	  }
 
-		.point6 {
-			bottom: -10px;
-			left: -10px;
-		}
+	  .point6 {
+	    bottom: -10px;
+	    left: -10px;
+	  }
 
-		.point8 {
-			bottom: -10px;
-			right: -10px;
-		}
+	  .point8 {
+	    bottom: -10px;
+	    right: -10px;
+	  }
 	}
 </style>
