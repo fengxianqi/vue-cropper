@@ -182,6 +182,10 @@ export default {
 		original: {
 			type: Boolean,
 			default: false
+		},
+		mode: {
+			type: Number,
+			default: 0
 		}
 	},
 	computed: {
@@ -356,6 +360,7 @@ export default {
 				this.cropW = 0
 				this.cropH = 0
 			}
+			// console.log('startMove, this.moveX: ', this.moveX, ',this.moveY', this.moveY)
 		},
 
 		// 移动端缩放
@@ -423,6 +428,7 @@ export default {
 				this.x = ~~(nowX - this.moveX)
 				this.y = ~~(nowY - this.moveY)
 			})
+			// console.log('moveImg e:', e)
 		},
 		// 移动图片结束
 		leaveImg (e) {
@@ -437,6 +443,7 @@ export default {
 			if (this.canScale) {
 				window.addEventListener(this.support, this.changeSize)
 			}
+			// console.log('scaleImg, this.support:', this.support)
 		},
 		// 移出框
 		cancleScale () {
@@ -469,6 +476,7 @@ export default {
 				}, 50)
 			}
 			this.scaling = true
+			// console.log('changeSize, this.scalingSet: ', this.scalingSet)
 		},
 
 		// 修改图片大小函数
@@ -478,6 +486,7 @@ export default {
 			coe = coe / this.trueWidth > coe / this.trueHeight ? coe / this.trueHeight : coe / this.trueWidth
 			num = num * coe
 			num > 0 ? this.scale += Math.abs(num) : this.scale > Math.abs(num) ? this.scale -= Math.abs(num) : this.scale
+			// console.log('changeScale,num: ', num)
 		},
 		// 创建截图框
 		createCrop (e) {
@@ -668,9 +677,11 @@ export default {
 		},
 
 		moveCrop (e) {
+			// console.log('moveCrop e: ', e)
 			e.preventDefault()
 			var nowX = e.clientX ? e.clientX : e.touches[0].clientX
 			var nowY = e.clientY ? e.clientY : e.touches[0].clientY
+			// console.log('this.cropperImg:', this.$refs.cropperImg)
 			this.$nextTick(() => {
 				var fw = ~~(nowX - this.cropX)
 				var fh = ~~(nowY - this.cropY)
@@ -689,6 +700,9 @@ export default {
 				} else {
 					this.cropOffsertY = fh
 				}
+				// console.log('x: ', this.x)
+				// console.log('y: ', this.y)
+
 			})
 		},
 
